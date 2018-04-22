@@ -1,2 +1,3 @@
 # GTranslate-strings-xml
-Creats a strings.xml file by Google auto-translating an input strings.xml file
+
+Creats a strings.xml as needed for Android projects by Google auto-translating an input strings.xml file
