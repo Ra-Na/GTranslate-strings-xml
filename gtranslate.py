@@ -10,7 +10,7 @@
 # run via "python3.5 gtranslate.py"
 
 INPUTLANGUAGE='en'
-OUTPUTLANGUAGE='ja'
+OUTPUTLANGUAGE='ko'
 INFILE='strings.xml'
 OUTFILE='strings_ja.xml'
 
@@ -166,17 +166,22 @@ OUTFILE='strings_ja.xml'
 #   yo          Yoruba
 #   zu          Zulu
 
+import html
 import requests
 import xml.etree.ElementTree as ET
 from io import BytesIO
 
 def translate(to_translate, to_language="auto", language="auto"):
  r = requests.get("http://translate.google.com/m?hl=%s&sl=%s&q=%s"% (to_language, language, to_translate.replace(" ", "+")))
+ if r.encoding is None or r.encoding == 'ISO-8859-1':
+     r.encoding = r.apparent_encoding
+ text=html.unescape(r.text)    
  before_trans = 'class="t0">'
  after_trans='</div><form'
  parsed1=r.text[r.text.find(before_trans)+len(before_trans):]
  parsed2=parsed1[:parsed1.find(after_trans)]
- return parsed2
+ 
+ return html.unescape(parsed2)
 
 tree = ET.parse(INFILE)
 root = tree.getroot()
@@ -190,3 +195,5 @@ for i in range(len(root)):
         print(root[i].text)
 
 tree.write(OUTFILE, encoding='utf-8')
+
+#~ translate("hello world","kn","en")
