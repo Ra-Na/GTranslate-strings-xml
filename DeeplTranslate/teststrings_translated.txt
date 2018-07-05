@@ -1,0 +1,8 @@
+1:Hallo grausame Welt!
+2:Mail an Entwickler
+3:Tippen Sie auf die Kontrollkästchen, um Elemente auszuwählen.
+4:Suche
+5:Suche in Designideen
+6:Wonach kann ich suchen?
+7:Muss ich ein Konto haben, um Informationen zu suchen und anzuzeigen?
+8:Wie suche ich nach Produkten in einem Design?
