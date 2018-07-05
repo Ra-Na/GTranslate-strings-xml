@@ -10,9 +10,9 @@
 # run via "python3.5 gtranslate.py"
 
 INPUTLANGUAGE='en'
-OUTPUTLANGUAGE='ko'
-INFILE='strings.xml'
-OUTFILE='strings_ja.xml'
+OUTPUTLANGUAGE='de'
+INFILE='teststrings.xml'
+OUTFILE='teststrings_de.xml'
 
 ### LANGUAGE CODES FOR REFERENCE
 
@@ -187,13 +187,29 @@ tree = ET.parse(INFILE)
 root = tree.getroot()
 for i in range(len(root)):
     print((str(i)+" ========================="))
-    totranslate=root[i].text
-    print(totranslate)
-    print("-->")
-    if(totranslate!=None):
-        root[i].text=translate(totranslate,OUTPUTLANGUAGE,INPUTLANGUAGE)
-        print(root[i].text)
-
+    if(root[i].tag=='string'):
+        totranslate=root[i].text
+        print(totranslate)
+        print("-->")
+        if(totranslate!=None):
+            root[i].text=translate(totranslate,OUTPUTLANGUAGE,INPUTLANGUAGE)
+            print(root[i].text)
+    if(root[i].tag=='string-array'):
+        for j in range(len(root[i])):	
+            print((str(i)+" ========================="))
+            if(root[i][j].tag=='item'):
+                totranslate=root[i][j].text
+                print(totranslate)
+                if(totranslate!=None):
+                    root[i][j].text=translate(totranslate,OUTPUTLANGUAGE,INPUTLANGUAGE)
+                    print(root[i][j].text)
+     
 tree.write(OUTFILE, encoding='utf-8')
 
 #~ translate("hello world","kn","en")
+
+#~ 1. check with root[4].tag wether string or string array
+#~ 2. cycle through string array and do root[5][2].text to get text
+
+
+

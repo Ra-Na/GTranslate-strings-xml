@@ -1,0 +1,12 @@
+<resources>
+    <string name="hellow">Hallo grausame Welt!</string>
+    <string name="mailtodeveloper">Mail an den Entwickler</string>
+    <string name="userisgoat">Tippen Sie auf die Kontrollkästchen, um Elemente auszuwählen.</string>
+    <string name="btn_search">Suche</string> 
+    <string name="radio_design_ideas">Suche in Design-Ideen</string> 
+    <string-array name="search_title"> 
+		<item>Was kann ich suchen?</item> 
+		<item>Muss ich ein Konto haben, um Informationen zu suchen und anzuzeigen?</item> 
+		<item>Wie suche ich nach Produkten, die in einem Design angezeigt werden?</item> 
+	</string-array>
+</resources>
