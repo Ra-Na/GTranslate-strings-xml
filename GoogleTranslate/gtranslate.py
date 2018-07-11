@@ -186,14 +186,15 @@ tree = ET.parse(INFILE)
 root = tree.getroot()
 for i in range(len(root)):
     print((str(i)+" ========================="))
-    if(root[i].tag=='string'):
+    isTranslatable = root[i].get('translatable')
+    if(root[i].tag=='string') & (isTranslatable!='false'):
         totranslate=root[i].text
         print(totranslate)
         print("-->")
         if(totranslate!=None):
             root[i].text=translate(totranslate,OUTPUTLANGUAGE,INPUTLANGUAGE)
             print(root[i].text)
-    if(root[i].tag=='string-array'):
+    if(root[i].tag=='string-array') & (isTranslatable!='false'):
         for j in range(len(root[i])):	
             print((str(i)+" ========================="))
             if(root[i][j].tag=='item'):
