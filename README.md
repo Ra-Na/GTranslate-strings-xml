@@ -9,8 +9,8 @@ This adds support above this in the original project as follows:
 1. Support for translatable=false
 2. Support to copy across comments verbatim
 3. Bugs exist as in the original as of 11th July 2018:
-    * CDATA tag is corrupted
-    * > is converted to url safe &gt;
+    * &lt;![CDATA[some stuff]]> tag is corrupted
+    * &gt; is converted to url safe &amp;gt;
     * content type header is stripped from file
 
 ORIGINAL README Content below:
