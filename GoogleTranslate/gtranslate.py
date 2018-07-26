@@ -4,14 +4,14 @@
 # This python skript extracts string resources, calls Google translate
 # and reassambles a new strings.xml as fitted for Android projects.
 
-# run via "python3.5 gtranslate.py"
+# run via "python3.5 gtranslate.py", newer versions should work as well
 
 ### Settings 
 
 INPUTLANGUAGE='en'
-OUTPUTLANGUAGE='de'
+OUTPUTLANGUAGE='th'
 INFILE='teststrings.xml'
-OUTFILE='teststrings_de.xml'
+OUTFILE='teststrings_th.xml'
 
 ### LANGUAGE CODES FOR REFERENCE
 
@@ -167,34 +167,51 @@ OUTFILE='teststrings_de.xml'
 
 import html
 import requests
+import os
 import xml.etree.ElementTree as ET
 from io import BytesIO
 
 def translate(to_translate, to_language="auto", language="auto"):
  r = requests.get("http://translate.google.com/m?hl=%s&sl=%s&q=%s"% (to_language, language, to_translate.replace(" ", "+")))
- if r.encoding is None or r.encoding == 'ISO-8859-1':
-     r.encoding = r.apparent_encoding
+ beforecharset='charset='
+ aftercharset='" http-equiv'
+ parsed1=r.text[r.text.find(beforecharset)+len(beforecharset):]
+ parsed2=parsed1[:parsed1.find(aftercharset)]
+ 
+ if(parsed2!=r.encoding):
+     print('\x1b[1;31;40m' + 'Warning: Potential Charset conflict' )
+     print(" Encoding as extracted by SELF    : "+parsed2)
+     print(" Encoding as detected by REQUESTS : "+r.encoding+ '\x1b[0m')
+
+# Work around an AGE OLD Python bug in case of windows-874 encoding
+# https://bugs.python.org/issue854511
+
+ if(r.encoding=='windows-874' and os.name=='posix'):
+     print('\x1b[1;31;40m' + "Alert: Working around age old Python bug (https://bugs.python.org/issue854511)\nOn Linux, charset windows-874 must be labeled as charset cp874"+'\x1b[0m')
+     r.encoding='cp874'
+
  text=html.unescape(r.text)    
  before_trans = 'class="t0">'
  after_trans='</div><form'
  parsed1=r.text[r.text.find(before_trans)+len(before_trans):]
  parsed2=parsed1[:parsed1.find(after_trans)]
- 
+ print(parsed2) 
  return html.unescape(parsed2)
+
+
 
 tree = ET.parse(INFILE)
 root = tree.getroot()
 for i in range(len(root)):
     print((str(i)+" ========================="))
-    isTranslatable = root[i].get('translatable')
-    if(root[i].tag=='string') & (isTranslatable!='false'):
+    if(root[i].tag=='string'):
         totranslate=root[i].text
         print(totranslate)
         print("-->")
         if(totranslate!=None):
             root[i].text=translate(totranslate,OUTPUTLANGUAGE,INPUTLANGUAGE)
             print(root[i].text)
-    if(root[i].tag=='string-array') & (isTranslatable!='false'):
+    if(root[i].tag=='string-array'):
         for j in range(len(root[i])):	
             print((str(i)+" ========================="))
             if(root[i][j].tag=='item'):
