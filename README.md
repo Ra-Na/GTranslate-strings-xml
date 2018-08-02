@@ -17,5 +17,3 @@ Note:
         Dutch
         Polish Deepl yields better translations. 
         
-2.) The Google translate script should by now handle asian fonts correctly.
-   
