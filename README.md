@@ -5,7 +5,7 @@ As of July 2018, two translation services are implemented, namely DEEPL and GOOL
 
 The Google translate script works here:
 
-http://gluege.boerde.de/
+https://asrt.gluege.boerde.de/
 
 Note:
 
