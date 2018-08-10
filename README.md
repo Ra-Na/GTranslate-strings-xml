@@ -6,13 +6,3 @@ Both script works here:
 
 https://asrt.gluege.boerde.de/
 
-Note:
-
-1.) For English
-        German
-        Italian
-        French
-        Spanish
-        Dutch
-        Polish Deepl yields better translations. 
-        
