@@ -1,8 +1,0 @@
-1:Hello cruel world! 
-2:Mail to developer
-3:Tap on checkboxes to select items.
-4:Search
-5:Search in Design Ideas
-6:What can I search for?
-7:Do I have to have an account to search and view information?
-8:How do I search for products shown in a design?
