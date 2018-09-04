@@ -15,8 +15,6 @@
 # the second argument is the language to translate to
 # and finally the string file as the third argument.
 
-### Settings 
-
 ### LANGUAGE CODES FOR REFERENCE
 
 #   af          Afrikaans
