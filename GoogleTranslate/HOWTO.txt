@@ -1,5 +1,3 @@
-Running "python3.5 gtranslate.py" attempts to translate all the strings
+Running "python3.5 gtranslate.py inlang outlang infile.xml" attempts to translate all the strings
 of an Android string resource XML file by HTML-requests to translate.google.com.
-
-Specify in- and outfiles in gtranslate.py.
 
