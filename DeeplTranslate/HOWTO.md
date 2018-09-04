@@ -22,4 +22,4 @@ Therefore:
 It is important that both Python files get the XML structure from the same 
 input file.
 
-This works at [asrt.gluege.boerde.de] behind a web page.
+This works at [asrt.gluege.boerde.de](asrt.gluege.boerde.de) behind a web page.
