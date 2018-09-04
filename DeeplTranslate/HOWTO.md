@@ -1,12 +1,12 @@
 
 How to use DEEPL.COM to translate Android string resource XML files.
 
-* Why? * 
+* Why? 
 
 Deepl.com offers higher quality translations than translate.google.com 
 between FRENCH, GERMAN, ENGLISCH, DUTCH, ITALIAN, SPANISH and POLISH.
 
-* How? * 
+* How? 
 
 Non-commercial use is restricted to explicitely clicking on the website,
 automated HTML-requests are available as a payed service only. 
