@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # This python skript extracts string resources, calls Google translate
@@ -210,7 +210,10 @@ def translate(to_translate, to_language="auto", language="auto"):
  # extract translation and return it
  parsed1=r.text[r.text.find(before_trans)+len(before_trans):]
  parsed2=parsed1[:parsed1.find(after_trans)]
- return html.unescape(parsed2).replace("'", r"\'")
+ # fix parameter strings
+ parsed3 = re.sub('% ([ds])', r' %\1', parsed2)
+ parsed4 = re.sub('% ([\d]) \$ ([ds])', r' %\1$\2', parsed3).strip()
+ return html.unescape(parsed4).replace("'", r"\'")
 
 
 
