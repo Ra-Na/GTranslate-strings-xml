@@ -1,7 +1,7 @@
 <resources>
     <string name="hellow">Hello cruel world! </string>
     <string name="mailtodeveloper">Mail to developer</string>
-    <string name="userisgoat">Tap on checkboxes to select items.</string>
+    <string name="webadress">https://asrt.gluege.boerde.de</string>
     <string name="btn_search">Search</string> 
     <string name="radio_design_ideas">Search in Design Ideas</string> 
     <string-array name="search_title"> 
