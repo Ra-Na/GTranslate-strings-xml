@@ -6,14 +6,12 @@
 
 # run via 
 
-# PYTHONIOENCODING=utf8 python3.5 gtranslate.py de en strings.xml
+# PYTHONIOENCODING=utf8 python3 gtranslate.py  OR using pythong launcher 
+# follow instructions
 
-# where firstly the environment variable PYTHONENCODING is set,
-# then python is called,
-# then the name of the current file plus argument strings, 
-# where the first argument is the language in the strings.xml,
-# the second argument is the language to translate to
-# and finally the string file as the third argument.
+# output format: values-XX folders with strings.xml inside
+
+# edited by alexVinrskis, March 2020
 
 ### LANGUAGE CODES FOR REFERENCE
 
@@ -172,13 +170,6 @@
 #   SUBROUTINES
 #
 
-# This subroutine extracts the string including html tags
-# and may replace "root[i].text".  
-# It cannot digest arbitrary encodings, so use it only if necessary.
-def findall_content(xml_string, tag):
-    pattern = r"<(?:\w+:)?%(tag)s(?:[^>]*)>(.*)</(?:\w+:)?%(tag)s" % {"tag": tag}
-    return re.findall(pattern, xml_string, re.DOTALL)
-
 # This subroutine calls Google translate and extracts the translation from
 # the html request
 def translate(to_translate, to_language="auto", language="auto"):
@@ -220,9 +211,7 @@ def translate(to_translate, to_language="auto", language="auto"):
 
 
 
-#
 # MAIN PROGRAM
-#
 
 # import libraries
 import html
@@ -233,56 +222,65 @@ import sys
 from io import BytesIO
 import re
 
-# read argument vector
-INPUTLANGUAGE=sys.argv[1]
-OUTPUTLANGUAGE=sys.argv[2]
-INFILE=sys.argv[3]
+# ask user for paramters, apply defaults
+INFILE = input("Enter input filename: [default: strings.xml]\n")
+INPUTLANGUAGE = input("\nEnter source language: [default: en]\n")
+OUTPUTlangs = input("\nEnter output language(s): (space separated) \n\n").split()
+if not INFILE:
+    INFILE = "strings.xml"
+if not INPUTLANGUAGE:
+    INPUTLANGUAGE = "en"
 
-# create outfile name by appending the language code to the infile name
-name, ext=os.path.splitext(INFILE)
-OUTFILE= "{name}_{OUTPUTLANGUAGE}{ext}".format(name=name,OUTPUTLANGUAGE=OUTPUTLANGUAGE,ext=ext)
+print("=================================================\n\n")
 
-# read xml structure
-tree = ET.parse(INFILE)
-root = tree.getroot()
+# repeat proccess for each of the lang 
+for OUTPUTLANGUAGE in OUTPUTlangs:
+    # create outfile in subfolder
+    name, ext=os.path.splitext(INFILE)
+    if not os.path.exists("values-" + OUTPUTLANGUAGE):
+        os.mkdir("values-" + OUTPUTLANGUAGE)
+    OUTFILE= "values-" + OUTPUTLANGUAGE + "\\strings.xml"
+    # read xml structure
+    tree = ET.parse(INFILE)
+    root = tree.getroot()
 
-# cycle through elements 
-for i in range(len(root)):
-#	for each translatable string call the translation subroutine
-#   and replace the string by its translation,
-#   descend into each string array  
-    isTranslatable=root[i].get('translatable')
-    print((str(i)+" ========================="))
-    if(isTranslatable=='false'):
-        print("Not translatable")
-    if(root[i].tag=='string') & (isTranslatable!='false'):
-# Here you might want to replace root[i].text by the findall_content function
-# if you need to extract html tags
-        # ~ totranslate="".join(findall_content(str(ET.tostring(root[i])),"string"))
-        totranslate=root[i].text
-        if(totranslate!=None):
-            print(totranslate+"-->", end='')
-            root[i].text=translate(totranslate,OUTPUTLANGUAGE,INPUTLANGUAGE)
-            print(root[i].text)
-    if(root[i].tag=='string-array'):
-        print("Entering string array...")
-        for j in range(len(root[i])):
-#	for each translatable string call the translation subroutine
-#   and replace the string by its translation,
-            isTranslatable=root[i][j].get('translatable')
-            print((str(i)+" " + str(j) + " ========================="))
-            if(isTranslatable=='false'):
-                print("Not translatable")
-            if(root[i][j].tag=='item') & (isTranslatable!='false'):
-# Here you might want to replace root[i].text by the findall_content function
-# if you need to extract html tags
-                # ~ totranslate="".join(findall_content(str(ET.tostring(root[i][j])),"item"))
-                totranslate=root[i][j].text
-                if(totranslate!=None):
-                    print(totranslate+"-->", end='')
-                    root[i][j].text=translate(totranslate,OUTPUTLANGUAGE,INPUTLANGUAGE)
-                    print(root[i][j].text)
+    print(OUTPUTLANGUAGE + "...\n")
 
-# write new xml file
-tree.write(OUTFILE, encoding='utf-8')
+    # cycle through elements 
+    for i in range(len(root)):
+    #	for each translatable string call the translation subroutine
+    #   and replace the string by its translation,
+    #   descend into each string array  
+        isTranslatable=root[i].get('translatable')
+        if(root[i].tag=='string') & (isTranslatable!='false'):
+            # trasnalte text and fix any possible issues traslotor creates: messing up HTML tags, adding spaces between string formatting elements
+            totranslate=root[i].text
+            if(totranslate!=None):
+                root[i].text=translate(totranslate,OUTPUTLANGUAGE,INPUTLANGUAGE).replace('\\ ', '\\').replace('\\ n ', '\\n').replace('\\n ', '\\n').replace('/ ', '/')
+
+            # if string was broken down due to HTML tags, reassemble it
+            if len(root[i]) != 0:
+                for element in range(len(root[i])):
+                    root[i][element].text = " " + translate(root[i][element].text, OUTPUTLANGUAGE, INPUTLANGUAGE).replace('\\ ', '\\').replace('\\ n ', '\\n').replace('\\n ', '\\n').replace('/ ', '/')
+                    root[i][element].tail = " " + translate(root[i][element].tail, OUTPUTLANGUAGE, INPUTLANGUAGE).replace('\\ ', '\\').replace('\\ n ', '\\n').replace('\\n ', '\\n').replace('/ ', '/')
+
+        if(root[i].tag=='string-array'):
+            for j in range(len(root[i])):
+    #	for each translatable string call the translation subroutine
+    #   and replace the string by its translation,
+                isTranslatable=root[i][j].get('translatable')
+                if(root[i][j].tag=='item') & (isTranslatable!='false'):
+                    # trasnalte text and fix any possible issues traslotor creates: messing up HTML tags, adding spaces between string formatting elements
+                    totranslate=root[i][j].text
+                    if(totranslate!=None):
+                        root[i][j].text=translate(totranslate,OUTPUTLANGUAGE,INPUTLANGUAGE).replace('\\ ', '\\').replace('\\ n ', '\\n').replace('\\n ', '\\n').replace('/ ', '/')
+
+                    # if string was broken down due to HTML tags, reassemble it
+                    if len(root[i][j]) != 0:
+                        for element in range(len(root[i][j])):
+                            root[i][j][element].text = " " + translate(root[i][j][element].text, OUTPUTLANGUAGE, INPUTLANGUAGE).replace('\\ ', '\\').replace('\\ n ', '\\n').replace('\\n ', '\\n').replace('/ ', '/')
+                            root[i][j][element].tail = " " + translate(root[i][j][element].tail, OUTPUTLANGUAGE, INPUTLANGUAGE).replace('\\ ', '\\').replace('\\ n ', '\\n').replace('\\n ', '\\n').replace('/ ', '/')
+
+    # write new xml file
+    tree.write(OUTFILE, encoding='utf-8')
 
