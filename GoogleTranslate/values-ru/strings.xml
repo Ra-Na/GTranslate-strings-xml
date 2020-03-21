@@ -1,0 +1,11 @@
+<resources>
+  <string name="webadress">https://asrt.gluege.boerde.de</string>
+  <string name="simple_text">Поиск</string> 
+  <string name="includes_html_tags">Здравствуйте<b> Мир</b> !</string>
+  <string name="includes_paragraphs">Здравствуйте<b> Мир</b> !     \nЭто тестовое сообщение     \n\nДаже с двойным возвратом!</string>
+  <string-array name="search_title"> 
+		<item>Что я могу найти?</item> 
+		<item>Должен ли я иметь<i> аккаунт для поиска</i> и просматривать информацию?</item> 
+		<item>Как мне искать продукты, показанные в дизайне?</item> 
+	</string-array>
+</resources>

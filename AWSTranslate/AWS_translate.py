@@ -6,11 +6,10 @@
 
 # run via 
 
-# PYTHONIOENCODING=utf8 python3 gtranslate.py  OR using pythong launcher 
+# PYTHONIOENCODING=utf8 python3 AWS_translate.py OR using pythong launcher 
 # follow instructions
 
-# output format: values-XX folders with strings.xml inside
-
+# P.S. You must have AWS CLI installed and configure on the machine!
 # edited by alexVinrskis, March 2020
 
 ### LANGUAGE CODES FOR REFERENCE
@@ -166,49 +165,6 @@
 #   yo          Yoruba
 #   zu          Zulu
 
-#
-#   SUBROUTINES
-#
-
-# This subroutine calls Google translate and extracts the translation from
-# the html request
-def translate(to_translate, to_language="auto", language="auto"):
-    # send request
-    r = requests.get("https://translate.google.com/m?hl=%s&sl=%s&q=%s"% (to_language, language, to_translate.replace(" ", "+")))
-    if("notranslate" in r.text):
-        return(to_translate)
-    else:		
-        # set markers that enclose the charset identifier
-        beforecharset='charset='
-        aftercharset='" http-equiv'
-        # extract charset 
-        parsed1=r.text[r.text.find(beforecharset)+len(beforecharset):]
-        parsed2=parsed1[:parsed1.find(aftercharset)]
-        # Display warning when encoding mismatch 
-        if(parsed2!=r.encoding):
-            print('\x1b[1;31;40m' + 'Warning: Potential Charset conflict' )
-            print(" Encoding as extracted by SELF    : "+parsed2)
-            print(" Encoding as detected by REQUESTS : "+r.encoding+ '\x1b[0m')
-	    
-        # Work around an AGE OLD Python bug in case of windows-874 encoding
-        # https://bugs.python.org/issue854511
-        if(r.encoding=='windows-874' and os.name=='posix'):
-            print('\x1b[1;31;40m' + "Alert: Working around age old Python bug (https://bugs.python.org/issue854511)\nOn Linux, charset windows-874 must be labeled as charset cp874"+'\x1b[0m')
-            r.encoding='cp874'
-	    
-        # convert html tags  
-        text=html.unescape(r.text)    
-        # set markers that enclose the wanted translation
-        before_trans = 'class="t0">'
-        after_trans='</div><form'
-        # extract translation and return it
-        parsed1=r.text[r.text.find(before_trans)+len(before_trans):]
-        parsed2=parsed1[:parsed1.find(after_trans)]
-        # fix parameter strings
-        parsed3 = re.sub('% ([ds])', r' %\1', parsed2)
-        parsed4 = re.sub('% ([\d]) \$ ([ds])', r' %\1$\2', parsed3).strip()
-        return html.unescape(parsed4).replace("'", r"\'")
-
 
 
 # MAIN PROGRAM
@@ -221,6 +177,7 @@ import xml.etree.ElementTree as ET
 import sys
 from io import BytesIO
 import re
+import boto3
 
 # ask user for paramters, apply defaults
 INFILE = input("Enter input filename: [default: strings.xml]\n")
@@ -230,6 +187,9 @@ if not INFILE:
     INFILE = "strings.xml"
 if not INPUTLANGUAGE:
     INPUTLANGUAGE = "en"
+
+# connect to AWS 
+translate = boto3.client(service_name='translate', region_name='eu-west-1', use_ssl=True)
 
 print("=================================================\n\n")
 
@@ -256,13 +216,13 @@ for OUTPUTLANGUAGE in OUTPUTlangs:
             # trasnalte text and fix any possible issues traslotor creates: messing up HTML tags, adding spaces between string formatting elements
             totranslate=root[i].text
             if(totranslate!=None):
-                root[i].text=translate(totranslate,OUTPUTLANGUAGE,INPUTLANGUAGE).replace('\\ ', '\\').replace('\\ n ', '\\n').replace('\\n ', '\\n').replace('/ ', '/')
+                root[i].text=translate.translate_text(Text=totranslate, SourceLanguageCode=INPUTLANGUAGE, TargetLanguageCode=OUTPUTLANGUAGE).get('TranslatedText').replace('\\ ', '\\').replace('\\ n ', '\\n').replace('\\n ', '\\n').replace('/ ', '/')
 
             # if string was broken down due to HTML tags, reassemble it
             if len(root[i]) != 0:
                 for element in range(len(root[i])):
-                    root[i][element].text = " " + translate(root[i][element].text, OUTPUTLANGUAGE, INPUTLANGUAGE).replace('\\ ', '\\').replace('\\ n ', '\\n').replace('\\n ', '\\n').replace('/ ', '/')
-                    root[i][element].tail = " " + translate(root[i][element].tail, OUTPUTLANGUAGE, INPUTLANGUAGE).replace('\\ ', '\\').replace('\\ n ', '\\n').replace('\\n ', '\\n').replace('/ ', '/')
+                    root[i][element].text = " " + translate.translate_text(Text=root[i][element].text, SourceLanguageCode=INPUTLANGUAGE, TargetLanguageCode=OUTPUTLANGUAGE).get('TranslatedText').replace('\\ ', '\\').replace('\\ n ', '\\n').replace('\\n ', '\\n').replace('/ ', '/')
+                    root[i][element].tail = " " + translate.translate_text(Text=root[i][element].tail, SourceLanguageCode=INPUTLANGUAGE, TargetLanguageCode=OUTPUTLANGUAGE).get('TranslatedText').replace('\\ ', '\\').replace('\\ n ', '\\n').replace('\\n ', '\\n').replace('/ ', '/')
 
         if(root[i].tag=='string-array'):
             for j in range(len(root[i])):
@@ -273,13 +233,13 @@ for OUTPUTLANGUAGE in OUTPUTlangs:
                     # trasnalte text and fix any possible issues traslotor creates: messing up HTML tags, adding spaces between string formatting elements
                     totranslate=root[i][j].text
                     if(totranslate!=None):
-                        root[i][j].text=translate(totranslate,OUTPUTLANGUAGE,INPUTLANGUAGE).replace('\\ ', '\\').replace('\\ n ', '\\n').replace('\\n ', '\\n').replace('/ ', '/')
+                        root[i][j].text=translate.translate_text(Text=totranslate, SourceLanguageCode=INPUTLANGUAGE, TargetLanguageCode=OUTPUTLANGUAGE).get('TranslatedText').replace('\\ ', '\\').replace('\\ n ', '\\n').replace('\\n ', '\\n').replace('/ ', '/')
 
                     # if string was broken down due to HTML tags, reassemble it
                     if len(root[i][j]) != 0:
                         for element in range(len(root[i][j])):
-                            root[i][j][element].text = " " + translate(root[i][j][element].text, OUTPUTLANGUAGE, INPUTLANGUAGE).replace('\\ ', '\\').replace('\\ n ', '\\n').replace('\\n ', '\\n').replace('/ ', '/')
-                            root[i][j][element].tail = " " + translate(root[i][j][element].tail, OUTPUTLANGUAGE, INPUTLANGUAGE).replace('\\ ', '\\').replace('\\ n ', '\\n').replace('\\n ', '\\n').replace('/ ', '/')
+                            root[i][j][element].text = " " + translate.translate_text(Text=root[i][j][element].text, SourceLanguageCode=INPUTLANGUAGE, TargetLanguageCode=OUTPUTLANGUAGE).get('TranslatedText').replace('\\ ', '\\').replace('\\ n ', '\\n').replace('\\n ', '\\n').replace('/ ', '/')
+                            root[i][j][element].tail = " " + translate.translate_text(Text=root[i][j][element].tail, SourceLanguageCode=INPUTLANGUAGE, TargetLanguageCode=OUTPUTLANGUAGE).get('TranslatedText').replace('\\ ', '\\').replace('\\ n ', '\\n').replace('\\n ', '\\n').replace('/ ', '/')
 
     # write new xml file
     tree.write(OUTFILE, encoding='utf-8')
