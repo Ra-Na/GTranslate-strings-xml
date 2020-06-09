@@ -235,11 +235,7 @@ print("=================================================\n\n")
 
 # repeat proccess for each of the lang 
 for OUTPUTLANGUAGE in OUTPUTlangs:
-    # create outfile in subfolder
-    name, ext=os.path.splitext(INFILE)
-    if not os.path.exists("values-" + OUTPUTLANGUAGE):
-        os.mkdir("values-" + OUTPUTLANGUAGE)
-    OUTFILE= "values-" + OUTPUTLANGUAGE + "\\strings.xml"
+    OUTFILE= "strings_"+OUTPUTLANGUAGE+".xml"
     # read xml structure
     tree = ET.parse(INFILE)
     root = tree.getroot()
