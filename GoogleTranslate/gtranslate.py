@@ -221,6 +221,7 @@ import xml.etree.ElementTree as ET
 import sys
 from io import BytesIO
 import re
+import time
 
 # ask user for paramters, apply defaults
 INFILE = input("Enter input filename: [default: strings.xml]\n")
@@ -247,6 +248,7 @@ for OUTPUTLANGUAGE in OUTPUTlangs:
     #	for each translatable string call the translation subroutine
     #   and replace the string by its translation,
     #   descend into each string array  
+        time.sleep(1)
         isTranslatable=root[i].get('translatable')
         if(root[i].tag=='string') & (isTranslatable!='false'):
             # trasnalte text and fix any possible issues traslotor creates: messing up HTML tags, adding spaces between string formatting elements
