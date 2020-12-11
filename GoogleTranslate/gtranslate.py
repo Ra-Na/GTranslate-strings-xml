@@ -199,8 +199,8 @@ def translate(to_translate, to_language="auto", language="auto"):
         # convert html tags  
         text=html.unescape(r.text)    
         # set markers that enclose the wanted translation
-        before_trans = 'class="t0">'
-        after_trans='</div><form'
+        before_trans = 'class="result-container">'
+        after_trans='</div>'
         # extract translation and return it
         parsed1=r.text[r.text.find(before_trans)+len(before_trans):]
         parsed2=parsed1[:parsed1.find(after_trans)]
