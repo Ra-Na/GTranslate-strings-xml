@@ -174,7 +174,7 @@
 # the html request
 def translate(to_translate, to_language="auto", language="auto"):
     # send request
-    r = requests.get("https://translate.google.com/m?hl=%s&sl=%s&q=%s"% (to_language, language, to_translate.replace(" ", "+")))
+    r = requests.get("https://translate.google.com/m?sl=%s&tl=%s&q=%s&op=translate"% (language, to_language, to_translate.replace(" ", "+")))
     if("notranslate" in r.text):
         return(to_translate)
     else:		
