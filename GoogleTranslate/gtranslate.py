@@ -174,40 +174,37 @@
 # the html request
 def translate(to_translate, to_language="auto", language="auto"):
     # send request
-    r = requests.get("https://translate.google.com/m?sl=%s&tl=%s&q=%s&op=translate"% (language, to_language, to_translate.replace(" ", "+")))
-    if("notranslate" in r.text):
-        return(to_translate)
-    else:		
-        # set markers that enclose the charset identifier
-        beforecharset='charset='
-        aftercharset='" http-equiv'
-        # extract charset 
-        parsed1=r.text[r.text.find(beforecharset)+len(beforecharset):]
-        parsed2=parsed1[:parsed1.find(aftercharset)]
-        # Display warning when encoding mismatch 
-        if(parsed2!=r.encoding):
-            print('\x1b[1;31;40m' + 'Warning: Potential Charset conflict' )
-            print(" Encoding as extracted by SELF    : "+parsed2)
-            print(" Encoding as detected by REQUESTS : "+r.encoding+ '\x1b[0m')
-	    
-        # Work around an AGE OLD Python bug in case of windows-874 encoding
-        # https://bugs.python.org/issue854511
-        if(r.encoding=='windows-874' and os.name=='posix'):
-            print('\x1b[1;31;40m' + "Alert: Working around age old Python bug (https://bugs.python.org/issue854511)\nOn Linux, charset windows-874 must be labeled as charset cp874"+'\x1b[0m')
-            r.encoding='cp874'
-	    
-        # convert html tags  
-        text=html.unescape(r.text)    
-        # set markers that enclose the wanted translation
-        before_trans = 'class="result-container">'
-        after_trans='</div>'
-        # extract translation and return it
-        parsed1=r.text[r.text.find(before_trans)+len(before_trans):]
-        parsed2=parsed1[:parsed1.find(after_trans)]
-        # fix parameter strings
-        parsed3 = re.sub('% ([ds])', r' %\1', parsed2)
-        parsed4 = re.sub('% ([\d]) \$ ([ds])', r' %\1$\2', parsed3).strip()
-        return html.unescape(parsed4).replace("'", r"\'")
+    r = requests.get("https://translate.google.com/m?sl=%s&tl=%s&q=%s&op=translate"% (language, to_language, to_translate.replace(" ", "+")))	
+    beforecharset = 'charset='
+    aftercharset = '" http-equiv'
+    # extract charset 
+    parsed1 = r.text[r.text.find(beforecharset) + len(beforecharset):]
+    parsed2 = parsed1[:parsed1.find(aftercharset)]
+    # Display warning when encoding mismatch 
+    if (parsed2 != r.encoding):
+        print('\x1b[1;31;40m' + 'Warning: Potential Charset conflict')
+        print(" Encoding as extracted by SELF    : " + parsed2)
+        print(" Encoding as detected by REQUESTS : " + r.encoding + '\x1b[0m')
+    
+    # Work around an AGE OLD Python bug in case of windows-874 encoding
+    # https://bugs.python.org/issue854511
+    if (r.encoding == 'windows-874' and os.name == 'posix'):
+        print(
+            '\x1b[1;31;40m' + "Alert: Working around age old Python bug (https://bugs.python.org/issue854511)\nOn Linux, charset windows-874 must be labeled as charset cp874" + '\x1b[0m')
+        r.encoding = 'cp874'
+    
+    # convert html tags  
+    text = html.unescape(r.text)
+    # set markers that enclose the wanted translation
+    before_trans = 'class="result-container">'
+    after_trans = '</div>'
+    # extract translation and return it
+    parsed1 = r.text[r.text.find(before_trans) + len(before_trans):]
+    parsed2 = parsed1[:parsed1.find(after_trans)]
+    # fix parameter strings
+    parsed3 = re.sub('% ([ds])', r' %\1', parsed2)
+    parsed4 = re.sub('% ([\d]) \$ ([ds])', r' %\1$\2', parsed3).strip()
+    return html.unescape(parsed4).replace("'", r"\'")
 
 
 
