@@ -314,7 +314,7 @@ async def perform_translate(OUTPUTLANGUAGE):
         isTranslatable=root[i].get('translatable')
         if(root[i].tag=='string') & (isTranslatable!='false'):
             # trasnalte text and fix any possible issues traslotor creates: messing up HTML tags, adding spaces between string formatting elements
-            totranslate=root[i].text
+            totranslate=''.join(root[i].itertext())
             if(totranslate!=None):
                 root[i].text=await translate(totranslate,OUTPUTLANGUAGE,INPUTLANGUAGE)
 
