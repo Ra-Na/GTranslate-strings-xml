@@ -10,6 +10,6 @@
   <string-array name="search_title"> 
 		<item>What can I search for?</item> 
 		<item>Do I have to have an <i>account to search</i> and view information?</item> 
-		<item>How do I search for products shown in a design?</item> 
+		<item>How do I search for products shown in a design ?</item> 
 	</string-array>
 </resources>
