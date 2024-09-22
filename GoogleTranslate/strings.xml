@@ -1,17 +1,19 @@
 <resources>
-    <string name="amp_quotes_and_next_line">• Enter number &amp; query.\n• Use \'Submit\' button to submit.</string>
-    <string name="next_line">Hi\nhow are you?</string>
-    <string name="webadress">https://asrt.gluege.boerde.de</string>
-    <string name="simple_text">Search</string>
-    <string name="includes_html_tags">Hello <b>World</b> !</string>
-    <string name="includes_paragraphs">
-        Hello <b>World</b> !
-        \nThis is some test message
-        \n\nEven with double return!
-    </string>
-    <string-array name="search_title">
-        <item>What can I search for?</item>
-        <item>Do I have to have an <i>account to search</i> and view information?</item>
-        <item>How do I search for products shown in a design?</item>
-    </string-array>
+<string name="amp_quotes_and_next_line">  أدخل الرقم للاستعمالات .\n• استخدم زر \'إرسال\' للإرسال.</string>
+<string name="next_line">مرحبًا\nكيف حالك؟</string>
+<string name="webadress">https://asrt.gluege.boerde.de</string>
+<string name="simple_text">بحث</string>
+<string name="includes_html_tags">مرحبًا بالعالم</b>!</string>
+<string name="includes_paragraphs">
+مرحبًا بالعالم</b>!
+\nهذه رسالة اختبار
+\n\nحتى مع الإرجاع المزدوج!
+</string>
+<string-array name="search_title">
+<item>ما الذي يمكنني البحث عنه؟</item>
+<item>هل يجب أن يكون لدي حساب للبحث وعرض المعلومات؟</item>
+<item>كيف يمكنني البحث عن المنتجات المعروضة في التصميم؟</item>
+</string-array>
 </resources>
+
+ 
