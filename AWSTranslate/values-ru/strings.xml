@@ -1,13 +1,14 @@
-<resources>
+<الموارد>
   <string name="webadress">https://asrt.gluege.boerde.de</string>
-  <string name="simple_text">Находите</string> 
-  <string name="includes_html_tags">Здравствуйте<b> Всемирной</b> !</string>
-  <string name="includes_paragraphs">Здравствуйте<b> Всемирной</b> !
- \nЭто тестовое сообщение
- \n\nДаже с двойным возвратом!</string>
-  <string-array name="search_title"> 
-		<item>Что я могу искать?</item> 
-		<item>Должен ли я иметь<i> учетная запись для поиска</i> и просмотреть информацию?</item> 
-		<item>Как найти продукты, показанные в дизайне?</item> 
-	</string-array>
-</resources>
+  <string name="simple_text"></string> 
+  <string name="includes_html_tags">مرحبًا<b> بالعالم</b> !</string>
+  <string name="includes_paragraphs">مرحبًا<b>العالم</b>!
+ \nهذه رسالة اختبارية
+ \n\nحتى مع الإرجاع المزدوج!</string>
+  <اسم صفيف السلسلة = "search_litle"> 
+		<item>ما الذي يمكنني البحث عنه؟</item> 
+		<item>يجب أن تكون محاسبة مدخلاً للبحث</i>وعرض المعلومة؟</item> 
+		<item>كيف تجد المنتجات الموضحة في التصميم؟</item> 
+	</سلسلة المصفوفة>
+</الموارد >
+ 
